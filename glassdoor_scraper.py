@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.actions.wheel_input import ScrollOrigin
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 import time
 import pandas as pd
 
@@ -10,8 +11,6 @@ l = list()
 o = {}
 
 target_url = "https://www.glassdoor.com/Job/data-science-jobs-SRCH_KO0,12.htm?clickSource=searchBox"
-
-options = webdriver.ChromeOptions()
 
 driver = webdriver.Chrome()
 
@@ -30,8 +29,25 @@ nextButton = driver.find_element(By.CLASS_NAME, "nextButton")
 nextButton.click()
 time.sleep(2)
 
-resp += driver.page_source
+try:
+    driver.find_element(By.CLASS_NAME,"actionBarMt0").click()
+    print('actionBar')
+except ElementClickInterceptedException:
+    print('noBar')
+    pass
 
+time.sleep(.1)
+
+try:
+    driver.find_element(By.CLASS_NAME,"e1jbctw80").click() #clicking to the X.
+    print(' x out worked')
+except NoSuchElementException:
+    print(' x out failed')
+    pass
+
+time.sleep(2)
+
+resp += driver.page_source
 
 driver.close()
 
