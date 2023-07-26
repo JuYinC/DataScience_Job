@@ -66,18 +66,18 @@ def get_jobs(keyword, num_jobs, verbose, slp_time):
 
             job_button.click()  #You might
             #driver.find_element(By.CLASS_NAME,'jobCard').click()
-            time.sleep(2)
+            time.sleep(5)
             #collected_successfully = False
             
             #while not collected_successfully:
             try:
-                #company_name = job_button.find_element(By.CLASS_NAME,"8wag7x").text        
-                location = job_button.find_element(By.CLASS_NAME,"location").text
+                
+                location = job_button.find_element(By.CLASS_NAME,'location').text
                 job_title = job_button.find_element(By.CLASS_NAME,'job-title').text
-                #job_description = job_button.find_element(By.XPATH,'.//div[@class="jobDescriptionContent desc"]').text
+                company_name = job_button.find_element(By.CSS_SELECTOR, 'div[target="_blank"]').text                
                 #collected_successfully = True
             except:
-                time.sleep(5)
+                time.sleep(3)
 
             try:
                 salary_estimate = job_button.find_element(By.CLASS_NAME,'salary-estimate').text
@@ -101,62 +101,64 @@ def get_jobs(keyword, num_jobs, verbose, slp_time):
             #Going to the Company tab...
             #clicking on this:
             #<div class="tab" data-tab-type="overview"><span>Company</span></div>
-            # try:
-            #     driver.find_element(By.CLASS_NAME,'jobCard').click()
+            jdCol = driver.find_element(By.ID,'JDCol')
+            try:
+                emp_info = jdCol.find_element(By.ID,'EmpBasicInfo')
 
-            #     try:
-            #         #<div class="infoEntity">
-            #         #    <label>Headquarters</label>
-            #         #    <span class="value">San Francisco, CA</span>
-            #         #</div>
-            #         job_description = driver.find_element(By.ID,'JobDescriptionContainer').text
-            #     except NoSuchElementException:
-            #         job_description = -1
+                try:
+                    rating = jdCol.find_element(By.CSS_SELECTOR,'span[data-test="detailRating"]').text
+                except NoSuchElementException:
+                    rating = -1 #You need to set a "not found value. It's important."
 
-            #     try:
-            #         size = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         size = -1
+                try:
+                    size = emp_info.find_element(By.XPATH,'.//span[text()="Size"]//following-sibling::*').text
+                except NoSuchElementException:
+                    size = -1
 
-            #     try:
-            #         founded = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Founded"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         founded = -1
+                try:
+                    founded = emp_info.find_element(By.XPATH,'.//span[text()="Founded"]//following-sibling::*').text
+                except NoSuchElementException:
+                    founded = -1
 
-            #     try:
-            #         type_of_ownership = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Type"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         type_of_ownership = -1
+                try:
+                    type_of_ownership = emp_info.find_element(By.XPATH,'.//span[text()="Type"]//following-sibling::*').text
+                except NoSuchElementException:
+                    type_of_ownership = -1
 
-            #     try:
-            #         industry = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Industry"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         industry = -1
+                try:
+                    industry = emp_info.find_element(By.XPATH,'.//span[text()="Industry"]//following-sibling::*').text
+                except NoSuchElementException:
+                    industry = -1
 
-            #     try:
-            #         sector = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Sector"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         sector = -1
+                try:
+                    sector = emp_info.find_element(By.XPATH,'.//span[text()="Sector"]//following-sibling::*').text
+                except NoSuchElementException:
+                    sector = -1
 
-            #     try:
-            #         revenue = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Revenue"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         revenue = -1
+                try:
+                    revenue = emp_info.find_element(By.XPATH,'.//span[text()="Revenue"]//following-sibling::*').text
+                except NoSuchElementException:
+                    revenue = -1
 
-            #     try:
-            #         competitors = driver.find_element(By.XPATH,'.//div[@class="infoEntity"]//label[text()="Competitors"]//following-sibling::*').text
-            #     except NoSuchElementException:
-            #         competitors = -1
+                try:
+                    #<div class="infoEntity">
+                    #    <label>Headquarters</label>
+                    #    <span class="value">San Francisco, CA</span>
+                    #</div>
+                    jdCol.find_element(By.CLASS_NAME,'e856ufb4').click()
+                    time.sleep(5)
+                    job_description = jdCol.find_element(By.ID,'JobDescriptionContainer').text
+                except NoSuchElementException:
+                    job_description = -1
 
-            # except NoSuchElementException:  #Rarely, some job postings do not have the "Company" tab.
-            #     job_description = -1
-            #     size = -1
-            #     founded = -1
-            #     type_of_ownership = -1
-            #     industry = -1
-            #     sector = -1
-            #     revenue = -1
-            #     competitors = -1
+            except NoSuchElementException:  #Rarely, some job postings do not have the "Company" tab.
+                job_description = -1
+                size = -1
+                founded = -1
+                type_of_ownership = -1
+                industry = -1
+                sector = -1
+                revenue = -1
 
                 
             # if verbose:
@@ -173,18 +175,16 @@ def get_jobs(keyword, num_jobs, verbose, slp_time):
             jobs.append({
             "Job Title" : job_title,
             "Salary Estimate" : salary_estimate,
-            #"Job Description" : job_description,
-            #"Rating" : rating,
-            #"Company Name" : company_name,
+            "Company Name" : company_name,
             "Location" : location,
-            #"Headquarters" : headquarters,
-            # "Size" : size,
-            # "Founded" : founded,
-            # "Type of ownership" : type_of_ownership,
-            # "Industry" : industry,
-            # "Sector" : sector,
-            # "Revenue" : revenue,
-            # "Competitors" : competitors
+            "Job Description" : job_description,
+            "Rating" : rating,
+            "Size" : size,
+            "Founded" : founded,
+            "Type of ownership" : type_of_ownership,
+            "Industry" : industry,
+            "Sector" : sector,
+            "Revenue" : revenue,
             })
             #add job to jobs
             
