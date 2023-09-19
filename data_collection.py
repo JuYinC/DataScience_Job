@@ -1,8 +1,8 @@
 import scraper as sc
 import pandas as pd
 
-#done = ['Data Scientist', 'Data Analyst']
-jobs = ['Data Engineer',
+#Collect job with different job title
+jobs = ['Data Scientist', 'Data Analyst', 'Data Engineer',
         'Business Analyst', 'Machine Learning Engineer', 'Data Architect']
 
 for job in jobs:
