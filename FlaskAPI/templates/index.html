@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science Salary Estimator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .salary-amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .error {
+            background: #ffe0e0;
+            border-left-color: #ff4444;
+        }
+
+        .error h2 {
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Data Science Salary Estimator</h1>
+        <p class="subtitle">Get an estimated salary for your data science job</p>
+
+        <form id="salaryForm">
+            <div class="form-group">
+                <label for="rating">Company Rating (1-5)</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" step="0.1" value="4.0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Company Age (years)</label>
+                <input type="number" id="age" name="age" min="0" max="150" value="20" required>
+            </div>
+
+            <div class="form-group">
+                <label for="desc_len">Job Description Length (characters)</label>
+                <input type="number" id="desc_len" name="desc_len" min="0" max="20000" value="4392" required>
+                <small style="color: #666; font-size: 14px;">Typical job descriptions are 2000-6000 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label>Required Skills</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="python" name="python">
+                        <label for="python" style="margin: 0;">Python</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="excel" name="excel">
+                        <label for="excel" style="margin: 0;">Excel</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="sql" name="sql">
+                        <label for="sql" style="margin: 0;">SQL</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="tableau" name="tableau">
+                        <label for="tableau" style="margin: 0;">Tableau</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="spark" name="spark">
+                        <label for="spark" style="margin: 0;">Spark</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="aws" name="aws">
+                        <label for="aws" style="margin: 0;">AWS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ml" name="ml">
+                        <label for="ml" style="margin: 0;">Machine Learning</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Predict Salary</button>
+        </form>
+
+        <div id="result" class="result">
+            <h2>Estimated Salary</h2>
+            <div class="salary-amount" id="salaryAmount"></div>
+            <p style="color: #666; margin-top: 10px; font-size: 16px;">USD per year</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('salaryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const formData = {
+                rating: parseFloat(document.getElementById('rating').value),
+                age: parseInt(document.getElementById('age').value),
+                desc_len: parseInt(document.getElementById('desc_len').value),
+                python: document.getElementById('python').checked,
+                excel: document.getElementById('excel').checked,
+                sql: document.getElementById('sql').checked,
+                tableau: document.getElementById('tableau').checked,
+                spark: document.getElementById('spark').checked,
+                aws: document.getElementById('aws').checked,
+                ml: document.getElementById('ml').checked
+            };
+
+            try {
+                const response = await fetch('/predict_simple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                const resultDiv = document.getElementById('result');
+                const salaryAmount = document.getElementById('salaryAmount');
+
+                if (response.ok) {
+                    resultDiv.classList.remove('error');
+                    resultDiv.classList.add('show');
+                    salaryAmount.textContent = '$' + (data.response * 1000).toLocaleString('en-US', {maximumFractionDigits: 0});
+                } else {
+                    resultDiv.classList.add('error');
+                    resultDiv.classList.add('show');
+                    salaryAmount.textContent = 'Error: ' + (data.error || 'Unable to predict salary');
+                }
+            } catch (error) {
+                const resultDiv = document.getElementById('result');
+                const salaryAmount = document.getElementById('salaryAmount');
+                resultDiv.classList.add('error');
+                resultDiv.classList.add('show');
+                salaryAmount.textContent = 'Error: Unable to connect to server';
+            }
+        });
+    </script>
+</body>
+</html>
